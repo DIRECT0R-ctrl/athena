@@ -71,3 +71,44 @@ INSERT INTO task_status (name) VALUES
 ('in_progress'),
 ('done');
 
+CREATE TABLE task_priority (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
+);
+
+INSERT INTO task_priority (name) VALUES
+('low'),
+('medium'),
+('high');
+
+CREATE TABLE tasks (
+    id SERIAL PRIMARY KEY,
+    sprint_id INT NOT NULL,
+    creator_id INT NOT NULL,
+    assigned_to INT NULL,
+    status_id INT NOT NULL,
+    priority_id INT NOT NULL,
+    title VARCHAR(150) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL,
+
+    UNIQUE (sprint_id, title),
+
+    FOREIGN KEY (sprint_id) REFERENCES sprints(id) ON DELETE CASCADE,
+    FOREIGN KEY (creator_id) REFERENCES users(id),
+    FOREIGN KEY (assigned_to) REFERENCES users(id),
+    FOREIGN KEY (status_id) REFERENCES task_status(id),
+    FOREIGN KEY (priority_id) REFERENCES task_priority(id)
+);
+
+CREATE TABLE comments (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    task_id INT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+);
