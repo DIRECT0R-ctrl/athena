@@ -112,3 +112,22 @@ CREATE TABLE comments (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
 );
+
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+/* CREATE TABLE logs (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);*/
