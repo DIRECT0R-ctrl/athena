@@ -61,3 +61,13 @@ CREATE TABLE sprints (
     CHECK (start_date < end_date)
 );
 
+CREATE TABLE task_status (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
+);
+
+INSERT INTO task_status (name) VALUES
+('todo'),
+('in_progress'),
+('done');
+
