@@ -50,7 +50,7 @@ CREATE TABLE project_members (
 );
 
 CREATE TABLE sprints (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     project_id INT NOT NULL,
     title VARCHAR(150) NOT NULL,
     start_date DATE NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE sprints (
 );
 
 CREATE TABLE task_status (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE
 );
 
