@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/Auth.php';
+require_once __DIR__ . '/../controllers/AuthController.php';
 
 class Router {
     private $routes = [];
@@ -15,80 +16,85 @@ class Router {
         $method = $_SERVER['REQUEST_METHOD'];
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         
-        
+        // Remove project directory from URI if needed
         $basePath = str_replace('/index.php', '', $_SERVER['SCRIPT_NAME']);
         $uri = str_replace($basePath, '', $uri);
         
-        
+        // Default to home if empty
         if ($uri === '') {
             $uri = '/';
         }
-        
-        
-        if (isset($this->routes[$method][$uri])) {
-            $handler = $this->routes[$method][$uri];
-            
-            
-            if (isset($this->routes['protected'][$uri])) {
-                $this->auth->requireAuth();
+
+        $matchedHandler = null;
+        $matchedParams = [];
+
+        $routesForMethod = $this->routes[$method] ?? [];
+
+        // Try to find a matching route (support placeholders like [id])
+        foreach ($routesForMethod as $routePattern => $handler) {
+            $paramNames = [];
+            $regex = preg_replace_callback('/\[([a-zA-Z_][a-zA-Z0-9_]*)\]/', function($m) use (&$paramNames) {
+                $paramNames[] = $m[1];
+                return '([^\\/]+)';
+            }, $routePattern);
+
+            $regex = '#^' . $regex . '$#';
+
+            if (preg_match($regex, $uri, $matches)) {
+                array_shift($matches); // drop full match
+                $params = [];
+                foreach ($matches as $i => $value) {
+                    $params[$paramNames[$i] ?? $i] = $value;
+                }
+                $matchedHandler = $handler;
+                $matchedParams = $params;
+                break;
             }
-            
-            $this->callHandler($handler);
-            
+        }
+
+        if ($matchedHandler) {
+            // Check protected routes (match patterns similarly)
+            foreach ($this->routes['protected'] ?? [] as $protPattern => $protHandler) {
+                $protRegex = preg_replace_callback('/\[([a-zA-Z_][a-zA-Z0-9_]*)\]/', function($m) {
+                    return '([^\\/]+)';
+                }, $protPattern);
+                $protRegex = '#^' . $protRegex . '$#';
+                if (preg_match($protRegex, $uri)) {
+                    $this->auth->requireAuth();
+                    break;
+                }
+            }
+
+            $this->callHandler($matchedHandler, $matchedParams);
         } else {
-            
             http_response_code(404);
-            echo "404 - Page Not Found";
+            echo "404 - Page Not Found: $uri";
         }
     }
     
-    private function callHandler($handler) {
-        // For now,  later an9adha for better
-        // In next steps, i'll improve this
-        
-        if ($handler === 'HomeController@index') {
-            $this->showHome();
-        } elseif ($handler === 'AuthController@showLogin') {
-            $this->showLogin();
-        } elseif ($handler === 'AuthController@showRegister') {
-            $this->showRegister();
-        } elseif ($handler === 'AuthController@login') {
-            $this->handleLogin();
-        } elseif ($handler === 'AuthController@register') {
-            $this->handleRegister();
-        } elseif ($handler === 'AuthController@logout') {
-            $this->handleLogout();
+    private function callHandler($handler, $params = []) {
+        list($controllerName, $methodName) = explode('@', $handler);
+
+        $controllerClass = $controllerName;
+        if (!class_exists($controllerClass)) {
+            throw new Exception("Controller $controllerClass not found");
+        }
+
+        $controller = new $controllerClass();
+
+        if (!method_exists($controller, $methodName)) {
+            throw new Exception("Method $methodName not found in $controllerClass");
+        }
+
+        // Call method with extracted params (if any)
+        if (!empty($params)) {
+            call_user_func_array([$controller, $methodName], array_values($params));
         } else {
-            echo "Handler not implemented yet: {$handler}";
+            $controller->$methodName();
         }
-    }
-    
-    // Temporary handler methods (i'll move to controllers later)
-    private function showHome() {
-        require __DIR__ . '/../views/home.php';
-    }
-    
-    private function showLogin() {
-        require __DIR__ . '/../views/auth/login.php';
-    }
-    
-    private function showRegister() {
-        require __DIR__ . '/../views/auth/register.php';
-    }
-    
-    private function handleLogin() {
-        // i'll implement this in next step
-        echo "Login handler will be here";
-    }
-    
-    private function handleRegister() {
-        // i'll implement this in next step
-        echo "Register handler will be here";
-    }
-    
-    private function handleLogout() {
-        $this->auth->logout();
-        header('Location: /login');
-        exit;
     }
 }
+}
+    // private function callHandler($handler) {
+
+        // For now,  later an9adha for better

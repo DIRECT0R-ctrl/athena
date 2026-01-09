@@ -3,15 +3,33 @@
 <div style="max-width: 400px; margin: 0 auto;">
     <h2>Create Your Account</h2>
     
+    <?php
+    $errors = $session->get('register_errors', []);
+    $old = $session->get('old_input', []);
+    $session->remove('register_errors');
+    $session->remove('old_input');
+    ?>
+
+    <?php if (!empty($errors)): ?>
+        <div class="alert alert-error">
+            <strong>Registration failed:</strong>
+            <ul>
+                <?php foreach ($errors as $error): ?>
+                    <li><?php echo htmlspecialchars($error); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
     <form method="POST" action="/register" style="margin-top: 2rem;">
         <div class="form-group">
             <label for="fullname">Full Name</label>
-            <input type="text" id="fullname" name="fullname" class="form-control" required>
+            <input type="text" id="fullname" name="fullname" class="form-control" required value="<?php echo htmlspecialchars($old['fullname'] ?? ''); ?>">
         </div>
         
         <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" class="form-control" required>
+            <input type="email" id="email" name="email" class="form-control" required value="<?php echo htmlspecialchars($old['email'] ?? ''); ?>">
         </div>
         
         <div class="form-group">
