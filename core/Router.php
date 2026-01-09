@@ -94,7 +94,3 @@ class Router {
         }
     }
 }
-}
-    // private function callHandler($handler) {
-
-        // For now,  later an9adha for better
