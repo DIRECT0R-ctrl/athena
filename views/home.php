@@ -18,17 +18,17 @@
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
     <div class="card">
-        <h3>📋 Project Management</h3>
+        <h3>💼 Project Management</h3>
         <p>Create, organize, and track projects with ease. Assign tasks and set deadlines.</p>
     </div>
     
     <div class="card">
-        <h3>🚀 Agile Sprints</h3>
+        <h3>🏃 Agile Sprints</h3>
         <p>Plan sprints, track progress, and deliver value incrementally with Scrum methodology.</p>
     </div>
     
     <div class="card">
-        <h3>👥 Team Collaboration</h3>
+        <h3>🤝Team Collaboration</h3>
         <p>Work together seamlessly with task assignments, comments, and notifications.</p>
     </div>
     

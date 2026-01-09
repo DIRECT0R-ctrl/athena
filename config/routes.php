@@ -3,7 +3,7 @@
 return [
     
     'GET' => [
-        '/' => 'HomeController@index',
+        '/' => 'HomeController@index', // == homecontroler::index
         '/login' => 'AuthController@showLogin',
         '/register' => 'AuthController@showRegister',
         '/logout' => 'AuthController@logout',
