@@ -16,7 +16,9 @@ return [
     
     // protected routes (i will add later)
     'protected' => [
-        '/dashboard' => 'DashboardController@index',
-        '/projects' => 'ProjectController@index',
+	    '/dashboard' => 'DashboardController@index',
+	    '/profile' => 'UserController@profile',
+	    '/projects' => 'ProjectController@index',
+	    '/projects/create'=> 'ProjectController@create',
     ]
 ];
