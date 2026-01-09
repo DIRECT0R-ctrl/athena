@@ -3,10 +3,30 @@
 <div style="max-width: 400px; margin: 0 auto;">
     <h2>Login to Your Account</h2>
     
+    <?php
+    // les erreur ila kano 
+    $errors = $session->get('login_errors', []);
+    
+    // clearing that errors 
+    $session->remove('login_errors');
+    ?>
+    
+    <?php if (!empty($errors)): ?>
+        <div class="alert alert-error">
+            <strong>Login failed:</strong>
+            <ul>
+                <?php foreach ($errors as $error): ?>
+                    <li><?php echo htmlspecialchars($error); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+    
     <form method="POST" action="/login" style="margin-top: 2rem;">
         <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" class="form-control" required>
+            <input type="email" id="email" name="email" class="form-control" 
+                   value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" required>
         </div>
         
         <div class="form-group">
