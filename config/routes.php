@@ -7,6 +7,7 @@ return [
         '/login' => 'AuthController@showLogin',
         '/register' => 'AuthController@showRegister',
         '/logout' => 'AuthController@logout',
+        '/dashboard' => 'DashboardController@index',
         '/projects' => 'ProjectController@index',
         '/projects/create' => 'ProjectController@create',
         '/projects/[id]' => 'ProjectController@show',
