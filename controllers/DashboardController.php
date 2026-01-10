@@ -1,8 +1,5 @@
 <?php
 
-use Auth;
-use Session;
-
 class DashboardController {
     public function index() {
         $auth = Auth::getInstance();
