@@ -20,7 +20,19 @@ class ProjectController {
     public function index() {
         $this->auth->requireAuth();
         $user = $this->auth->user();
-        $projects = $this->projectRepo->findAll();
+        
+        $search = $_GET['search'] ?? '';
+        $status = $_GET['status'] ?? '';
+        
+        $filters = [];
+        if (!empty($search)) {
+            $filters['search'] = $search;
+        }
+        if (!empty($status)) {
+            $filters['status'] = $status;
+        }
+        
+        $projects = $this->projectRepo->findAll($filters);
         require_once __DIR__ . '/../views/projects/index.php';
     }
     
@@ -38,12 +50,20 @@ class ProjectController {
     }
     
     public function create() {
-        $this->auth->requireRole(ROLE_CHEF_PROJET);
+        $this->auth->requireAuth();
+        if (!$this->auth->isAdmin() && !$this->auth->isChefProjet()) {
+            header('Location: /dashboard');
+            exit;
+        }
         require_once __DIR__ . '/../views/projects/create.php';
     }
     
     public function store() {
-        $this->auth->requireRole(ROLE_CHEF_PROJET);
+        $this->auth->requireAuth();
+        if (!$this->auth->isAdmin() && !$this->auth->isChefProjet()) {
+            header('Location: /dashboard');
+            exit;
+        }
         $title = trim($_POST['title'] ?? '');
         $description = trim($_POST['description'] ?? '');
         $errors = [];
