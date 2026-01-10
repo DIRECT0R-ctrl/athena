@@ -85,6 +85,17 @@ class TaskController {
             $errors['title'] = 'Task title must be at least 3 characters';
         }
         
+        // Check for duplicate title in sprint
+        if (!empty($title) && $sprint_id) {
+            $existingTasks = $this->taskRepo->findBySprint($sprint_id);
+            foreach ($existingTasks as $task) {
+                if (strtolower($task->getTitle()) === strtolower($title)) {
+                    $errors['title'] = 'A task with this title already exists in this sprint';
+                    break;
+                }
+            }
+        }
+        
         if (!empty($errors)) {
             $this->session->set('task_errors', $errors);
             $this->redirect('/tasks/create?sprint_id=' . $sprint_id);
@@ -102,6 +113,9 @@ class TaskController {
                  ->setStatusId(1); // Default: todo
             
             $savedTask = $this->taskRepo->create($task);
+            
+            // Send notification
+            NotificationService::sendTaskCreated($savedTask, $user);
             
             $this->session->flash('success', 'Task created successfully!');
             $this->redirect('/tasks/' . $savedTask->getId());
@@ -176,6 +190,11 @@ class TaskController {
                  ->setPriorityId($priority_id);
             
             $this->taskRepo->update($task);
+            
+            // Send notification
+            $user = $this->auth->user();
+            $updater = $this->userRepo->find($user['id']);
+            NotificationService::sendTaskUpdated($task, $updater);
             
             $this->session->flash('success', 'Task updated successfully!');
             $this->redirect('/tasks/' . $id);

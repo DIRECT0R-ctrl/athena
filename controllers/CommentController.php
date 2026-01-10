@@ -3,12 +3,14 @@
 class CommentController {
     private $commentRepo;
     private $taskRepo;
+    private $userRepo;
     private $session;
     private $auth;
     
     public function __construct() {
         $this->commentRepo = new CommentRepository();
         $this->taskRepo = new TaskRepository();
+        $this->userRepo = new UserRepository();
         $this->session = new Session();
         $this->auth = Auth::getInstance();
     }
@@ -43,6 +45,10 @@ class CommentController {
                    ->setContent($content);
             
             $this->commentRepo->create($comment);
+            
+            // Send notification
+            $commenter = $this->userRepo->find($user['id']);
+            NotificationService::sendCommentAdded($comment, $commenter);
             
             $this->session->flash('success', 'Comment added successfully!');
             $this->redirect('/tasks/' . $task_id);
