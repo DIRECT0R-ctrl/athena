@@ -58,11 +58,15 @@ class User {
         return $this;
     }
     
-    public function setPassword($password) {
-        if (strlen($password) < 6) {
-            throw new Exception("Password must be at least 6 characters");
+    public function setPassword($password, $isHashed = false) {
+        if (!$isHashed) {
+            if (strlen($password) < 6) {
+                throw new Exception("Password must be at least 6 characters");
+            }
+            $this->password = password_hash($password, PASSWORD_DEFAULT);
+        } else {
+            $this->password = $password;
         }
-        $this->password = password_hash($password, PASSWORD_DEFAULT);
         return $this;
     }
     
@@ -134,6 +138,7 @@ class User {
                 ':role_id' => $this->role_id,
                 ':fullname' => $this->fullname,
                 ':email' => $this->email,
+                ':password' => $this->password,
                 ':is_active' => $this->is_active ? 1 : 0
             ]);
             
