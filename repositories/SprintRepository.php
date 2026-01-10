@@ -108,4 +108,12 @@ class SprintRepository {
             throw new Exception("Database error: " . $e->getMessage());
         }
     }
+    
+    public function count($filters = []) {
+        $sql = "SELECT COUNT(*) FROM sprints WHERE 1=1";
+        $params = [];
+        
+        $result = $this->db->fetch($sql, $params);
+        return (int) $result['count'];
+    }
 }

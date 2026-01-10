@@ -17,9 +17,23 @@ class ProjectRepository {
         return null;
     }
     
-    public function findAll() {
-        $sql = "SELECT * FROM projects WHERE is_active = true ORDER BY created_at DESC";
-        $data = $this->db->fetchAll($sql);
+    public function findAll($filters = []) {
+        $sql = "SELECT * FROM projects WHERE 1=1";
+        $params = [];
+        
+        if (!empty($filters['search'])) {
+            $sql .= " AND (title ILIKE :search OR description ILIKE :search)";
+            $params[':search'] = '%' . $filters['search'] . '%';
+        }
+        
+        if (isset($filters['status']) && $filters['status'] !== '') {
+            $sql .= " AND is_active = :status";
+            $params[':status'] = $filters['status'] === 'active' ? true : false;
+        }
+        
+        $sql .= " ORDER BY created_at DESC";
+        
+        $data = $this->db->fetchAll($sql, $params);
         
         $projects = [];
         foreach ($data as $projectData) {
@@ -147,5 +161,18 @@ class ProjectRepository {
             $members[] = new User($userData);
         }
         return $members;
+    }
+    
+    public function count($filters = []) {
+        $sql = "SELECT COUNT(*) FROM projects WHERE 1=1";
+        $params = [];
+        
+        if (!empty($filters['is_active'])) {
+            $sql .= " AND is_active = :is_active";
+            $params[':is_active'] = $filters['is_active'];
+        }
+        
+        $result = $this->db->fetch($sql, $params);
+        return (int) $result['count'];
     }
 }

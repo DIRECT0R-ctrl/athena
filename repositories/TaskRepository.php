@@ -150,4 +150,17 @@ class TaskRepository {
         }
         return $tasks;
     }
+    
+    public function count($filters = []) {
+        $sql = "SELECT COUNT(*) FROM tasks WHERE 1=1";
+        $params = [];
+        
+        if (!empty($filters['status_id'])) {
+            $sql .= " AND status_id = :status_id";
+            $params[':status_id'] = $filters['status_id'];
+        }
+        
+        $result = $this->db->fetch($sql, $params);
+        return (int) $result['count'];
+    }
 }
