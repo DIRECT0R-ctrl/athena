@@ -16,6 +16,8 @@ return [
         '/sprints/create' => 'SprintController@create',
         '/tasks/[id]' => 'TaskController@show',
         '/tasks/[id]/edit' => 'TaskController@edit',
+        '/tasks/create' => 'TaskController@create',
+        '/admin/dashboard' => 'AdminController@index',
     ],
     
     'POST' => [
@@ -30,6 +32,8 @@ return [
         '/tasks/[id]/update' => 'TaskController@update',
         '/tasks/[id]/delete' => 'TaskController@delete',
         '/comments/store' => 'CommentController@store',
+        '/admin/users/[id]/toggle' => 'AdminController@toggleUser',
+        '/admin/projects/[id]/toggle' => 'AdminController@toggleProject',
     ],
     
     // protected routes (i will add later)
