@@ -18,6 +18,6 @@ class HomeController {
             $user = $this->auth->user();
         }
         
-        require_once 'views/home.php';
+        require_once __DIR__ . '/../views/home.php';
     }
 }
