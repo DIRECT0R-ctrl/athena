@@ -80,11 +80,15 @@ class AuthController {
         
         // create new user
         try {
+            // Determine role: first user is admin, others are members
+            $userCount = $this->userRepo->count();
+            $role = ($userCount == 0) ? ROLE_ADMIN : ROLE_MEMBRE;
+            
             $user = new User();
             $user->setFullname($fullname)
                  ->setEmail($email)
                  ->setPassword($password)
-                 ->setRoleId(ROLE_MEMBRE); // Default role
+                 ->setRoleId($role); // Dynamic role assignment
             
             // making on db
             $savedUser = $user->save();
