@@ -36,7 +36,7 @@ class TaskController {
         $creator = $this->userRepo->find($task->getCreatorId());
         $comments = $this->commentRepo->findByTask($id);
         
-        require_once 'views/tasks/show.php';
+        require_once __DIR__ . '/../views/tasks/show.php';
     }
     
     /**
@@ -58,7 +58,7 @@ class TaskController {
             $members = $this->userRepo->findAll();
         }
         
-        require_once 'views/tasks/create.php';
+        require_once __DIR__ . '/../views/tasks/create.php';
     }
     
     /**
@@ -137,7 +137,7 @@ class TaskController {
             return;
         }
         
-        require_once 'views/tasks/edit.php';
+        require_once __DIR__ . '/../views/tasks/edit.php';
     }
     
     /**
