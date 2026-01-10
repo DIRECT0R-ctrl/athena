@@ -21,7 +21,7 @@ class ProjectController {
         $this->auth->requireAuth();
         $user = $this->auth->user();
         $projects = $this->projectRepo->findAll();
-        require_once 'views/projects/index.php';
+        require_once __DIR__ . '/../views/projects/index.php';
     }
     
     public function show($id) {
@@ -34,12 +34,12 @@ class ProjectController {
         }
         $sprints = $this->sprintRepo->findByProject($id);
         $members = $this->projectRepo->getMembers($id);
-        require_once 'views/projects/show.php';
+        require_once __DIR__ . '/../views/projects/show.php';
     }
     
     public function create() {
         $this->auth->requireRole(ROLE_CHEF_PROJET);
-        require_once 'views/projects/create.php';
+        require_once __DIR__ . '/../views/projects/create.php';
     }
     
     public function store() {
@@ -83,7 +83,7 @@ class ProjectController {
             http_response_code(403);
             return;
         }
-        require_once 'views/projects/edit.php';
+        require_once __DIR__ . '/../views/projects/edit.php';
     }
     
     public function update($id) {
