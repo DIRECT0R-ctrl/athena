@@ -32,7 +32,7 @@ class SprintController {
         $project = $this->projectRepo->find($sprint->getProjectId());
         $tasks = $this->taskRepo->findBySprint($id);
         
-        require_once 'views/sprints/show.php';
+        require_once __DIR__ . '/../views/sprints/show.php';
     }
     
     /**
@@ -48,7 +48,7 @@ class SprintController {
             $project = $this->projectRepo->find($project_id);
         }
         
-        require_once 'views/sprints/create.php';
+        require_once __DIR__ . '/../views/sprints/create.php';
     }
     
     /**
@@ -125,7 +125,7 @@ class SprintController {
         
         $project = $this->projectRepo->find($sprint->getProjectId());
         
-        require_once 'views/sprints/edit.php';
+        require_once __DIR__ . '/../views/sprints/edit.php';
     }
     
     /**
