@@ -75,4 +75,14 @@ class Sprint {
     public function isDateRangeValid() {
         return strtotime($this->start_date) < strtotime($this->end_date);
     }
+    
+    public function conflictsWith(Sprint $other) {
+        // Check if date ranges overlap
+        $thisStart = strtotime($this->start_date);
+        $thisEnd = strtotime($this->end_date);
+        $otherStart = strtotime($other->getStartDate());
+        $otherEnd = strtotime($other->getEndDate());
+        
+        return $thisStart <= $otherEnd && $thisEnd >= $otherStart;
+    }
 }

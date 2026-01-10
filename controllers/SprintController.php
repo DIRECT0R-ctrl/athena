@@ -98,6 +98,14 @@ class SprintController {
                 throw new Exception("End date must be after start date");
             }
             
+            // Check for conflicting sprints
+            $existingSprints = $this->sprintRepo->findByProject($project_id);
+            foreach ($existingSprints as $existing) {
+                if ($sprint->conflictsWith($existing)) {
+                    throw new Exception("Sprint dates conflict with existing sprint '{$existing->getTitle()}'");
+                }
+            }
+            
             $savedSprint = $this->sprintRepo->create($sprint);
             
             $this->session->flash('success', 'Sprint created successfully!');
