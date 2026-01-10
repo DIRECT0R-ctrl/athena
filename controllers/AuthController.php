@@ -17,7 +17,7 @@ class AuthController {
             $this->redirect('/dashboard');
         }
         
-        require_once 'views/auth/register.php';
+        require_once __DIR__ . '/../views/auth/register.php';
     }
     
     public function register() {
@@ -111,7 +111,7 @@ class AuthController {
             $this->redirect('/dashboard');
         }
         
-        require_once 'views/auth/login.php';
+        require_once __DIR__ . '/../views/auth/login.php';
     }
     
     /**
