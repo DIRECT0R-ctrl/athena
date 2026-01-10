@@ -15,7 +15,7 @@ $session = Session::getInstance();
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f7fa;
             min-height: 100vh;
             padding: 20px;
         }
@@ -46,7 +46,7 @@ $session = Session::getInstance();
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .welcome-section h2 {
-            color: #667eea;
+            color: #333;
             margin-bottom: 20px;
             font-size: 28px;
         }
@@ -73,19 +73,19 @@ $session = Session::getInstance();
             transition: all 0.3s ease;
         }
         .btn-primary {
-            background: #667eea;
+            background: #007bff;
             color: white;
         }
         .btn-primary:hover {
-            background: #5568d3;
+            background: #0056b3;
             transform: translateY(-2px);
         }
         .btn-secondary {
-            background: #764ba2;
+            background: #6c757d;
             color: white;
         }
         .btn-secondary:hover {
-            background: #633a8a;
+            background: #545b62;
             transform: translateY(-2px);
         }
         .btn-outline {
@@ -104,13 +104,13 @@ $session = Session::getInstance();
             margin-bottom: 30px;
         }
         .nav a {
-            color: #667eea;
+            color: #007bff;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s;
         }
         .nav a:hover {
-            color: #764ba2;
+            color: #0056b3;
         }
         .logout {
             background: #f56565;
@@ -131,6 +131,9 @@ $session = Session::getInstance();
         <div class="nav">
             <a href="/">Home</a>
             <a href="/projects">My Projects</a>
+            <?php if ($session->get('user_role') == 1): ?>
+                <a href="/admin/dashboard">Admin Panel</a>
+            <?php endif; ?>
             <a href="/logout" class="logout" style="padding: 8px 20px; border-radius: 5px; text-decoration: none;">Logout</a>
         </div>
 
